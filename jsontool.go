@@ -102,9 +102,9 @@ func (t *JSONTool) ErrorJSON(w http.ResponseWriter, err error, status ...int) er
 		statusCode = status[0]
 	}
 
-	var payload jsonResponse
+	var payload JSONResponse
 	payload.Error = true
 	payload.Message = err.Error()
 
-	return t.writeJson(w, statusCode, payload)
+	return t.WriteJSON(w, statusCode, payload)
 }
