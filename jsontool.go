@@ -13,13 +13,15 @@ type JSONTool struct {
 	JSONMaxBytes int
 }
 
+// JSONResponse is the type used for sending JSON around
 type JSONResponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
 }
 
-func (t *JSONTool) readJson(w http.ResponseWriter, r *http.Request, data any) error {
+// ReadJSON tries to read the body of a request and converts from json into a go data variable
+func (t *JSONTool) ReadJSON(w http.ResponseWriter, r *http.Request, data any) error {
 	maxBytes := 1048576 // 1 MB
 	if t.JSONMaxBytes != 0 {
 		maxBytes = t.JSONMaxBytes
@@ -73,6 +75,7 @@ func (t *JSONTool) readJson(w http.ResponseWriter, r *http.Request, data any) er
 	return nil
 }
 
+// WriteJSON takes a response status code and arbitrary data and writes json to the client
 func (t *JSONTool) WriteJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.Marshal(data)
 	if err != nil {
@@ -95,6 +98,7 @@ func (t *JSONTool) WriteJSON(w http.ResponseWriter, status int, data any, header
 	return nil
 }
 
+// ErrorJSON takes an error, & optionally a status code, and generates and sends a JSON error message
 func (t *JSONTool) ErrorJSON(w http.ResponseWriter, err error, status ...int) error {
 	statusCode := http.StatusBadRequest
 
